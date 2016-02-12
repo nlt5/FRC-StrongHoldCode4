@@ -1,0 +1,97 @@
+package org.usfirst.frc.team5676.robot;
+
+import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.buttons.*;
+import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+
+/**
+ * The VM is configured to automatically run this class, and to call the
+ * functions corresponding to each mode, as described in the IterativeRobot
+ * documentation. If you change the name of this class or the package after
+ * creating this project, you must also update the manifest file in the resource
+ * directory.
+ */
+public class Robot extends IterativeRobot {
+	RobotDrive DriveTrain41;
+	SpeedController victorsp1;
+	SpeedController victorsp2;
+	SpeedController victorsp3;
+	SpeedController victorsp4;
+	SpeedController victorsp5;
+	SpeedController victorsp6;
+	RobotDrive shootermotors;
+	Joystick xboxcontroller;
+	JoystickButton Leftjoystick;
+	JoystickButton xbutton;
+	JoystickButton ybutton;
+	int autoLoopCounter;
+	
+    /**
+     * This function is run when the robot is first started up and should be
+     * used for any initialization code.
+     */
+    public void robotInit() {
+    	DriveTrain41 = new RobotDrive(victorsp1,victorsp2,victorsp3, victorsp4);
+    	shootermotors = new RobotDrive(victorsp5,victorsp6);
+    	xboxcontroller = new Joystick(0);
+    	xbutton = new JoystickButton(xboxcontroller,8);
+    	ybutton = new JoystickButton(xboxcontroller, 9);
+    	
+    }
+    
+    /**
+     * This function is run once each time the robot enters autonomous mode
+     */
+    public void autonomousInit() {
+    	autoLoopCounter = 0;
+    }
+
+    /**
+     * This function is called periodically during autonomous
+     */
+    public void autonomousPeriodic() {
+    	if(autoLoopCounter < 100) //Check if we've completed 100 loops (approximately 2 seconds)
+		{
+			DriveTrain41.drive(-0.5, 0.0); 	// drive forwards half speed
+			autoLoopCounter++;
+			} else {
+			DriveTrain41.drive(0.0, 0.0); 	// stop robot
+		}
+    }
+    
+    /**
+     * This function is called once each time the robot enters tele-operated mode
+     */
+    public void teleopInit(){
+    }
+
+    /**
+     * This function is called periodically during operator control
+     */
+    public void teleopPeriodic() {
+        DriveTrain41.arcadeDrive(xboxcontroller);
+        shootermotors.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
+        
+        if(xboxcontroller.getRawButton(8)){
+        	shootermotors.drive(1,0);
+        }
+        else if (xboxcontroller.getRawButton(9)){
+        	shootermotors.drive(0, 0);
+        }
+        
+        
+        
+        
+    }
+    
+    /**
+     * This function is called periodically during test mode
+     */
+    public void testPeriodic() {
+    	LiveWindow.run();
+    }
+    
+}
